@@ -1,0 +1,17 @@
+.root {
+	display: flex;
+	flex-direction: column;
+
+	min-height: 100dvh;
+}
+
+.main {
+	display: flex;
+	flex-direction: inherit;
+
+	padding: 40px 0px;
+	gap: 28px;
+	transition: all 0.3s ease-in-out;
+
+	flex-grow: 1;
+}

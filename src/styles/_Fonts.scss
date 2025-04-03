@@ -1,0 +1,117 @@
+// Muller Font Family ———————————————————————————————————————————————— //
+
+$MullerFont: 'Muller';
+
+// Black
+@font-face {
+	font-family: $MullerFont;
+	src: url('/fonts/MullerBlack.woff2') format('woff2'),
+		url('/fonts/MullerBlack.woff') format('woff');
+	font-weight: 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: $MullerFont;
+	src: url('/fonts/MullerBlackItalic.woff2') format('woff2'),
+		url('/fonts/MullerBlackItalic.woff') format('woff');
+	font-weight: 900;
+	font-style: italic;
+	font-display: swap;
+}
+
+// Extra Bold
+@font-face {
+	font-family: $MullerFont;
+	src: url('/fonts/MullerExtraBold.woff2') format('woff2'),
+		url('/fonts/MullerExtraBold.woff') format('woff');
+	font-weight: 800;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: $MullerFont;
+	src: url('/fonts/MullerExtraBoldItalic.woff2') format('woff2'),
+		url('/fonts/MullerExtraBoldItalic.woff') format('woff');
+	font-weight: 800;
+	font-style: italic;
+	font-display: swap;
+}
+
+// Bold
+@font-face {
+	font-family: $MullerFont;
+	src: url('/fonts/MullerBold.woff2') format('woff2'),
+		url('/fonts/MullerBold.woff') format('woff');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: $MullerFont;
+	src: url('/fonts/MullerBoldItalic.woff2') format('woff2'),
+		url('/fonts/MullerBoldItalic.woff') format('woff');
+	font-weight: 700;
+	font-style: italic;
+	font-display: swap;
+}
+
+// Heavy
+@font-face {
+	font-family: $MullerFont;
+	src: url('/fonts/MullerHeavy.woff2') format('woff2'),
+		url('/fonts/MullerHeavy.woff') format('woff');
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: $MullerFont;
+	src: url('/fonts/MullerHeavyItalic.woff2') format('woff2'),
+		url('/fonts/MullerHeavyItalic.woff') format('woff');
+	font-weight: 600;
+	font-style: italic;
+	font-display: swap;
+}
+
+// Medium
+@font-face {
+	font-family: $MullerFont;
+	src: url('/fonts/MullerMedium.woff2') format('woff2'),
+		url('/fonts/MullerMedium.woff') format('woff');
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: $MullerFont;
+	src: url('/fonts/MullerMediumItalic.woff2') format('woff2'),
+		url('/fonts/MullerMediumItalic.woff') format('woff');
+	font-weight: 500;
+	font-style: italic;
+	font-display: swap;
+}
+
+// Regular
+@font-face {
+	font-family: $MullerFont;
+	src: url('/fonts/MullerRegular.woff2') format('woff2'),
+		url('/fonts/MullerRegular.woff') format('woff');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: $MullerFont;
+	src: url('/fonts/MullerRegularItalic.woff2') format('woff2'),
+		url('/fonts/MullerRegularItalic.woff') format('woff');
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
+}
