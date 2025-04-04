@@ -1,4 +1,5 @@
 import * as yup from 'yup'
+import debounce from 'lodash/debounce'
 
 export enum SocialNetwork {
 	VK = 'vk',
@@ -182,7 +183,7 @@ const baseBannedWords = [
 	'халявные ножи',
 	'обмануть стим',
 	'http',
-	'www',
+	// 'www',
 	'кейса',
 	'вот сайт где',
 	'можешь тащить катки один',
@@ -815,16 +816,17 @@ const baseBannedWords = [
 	'мхл',
 ]
 
-// Создаем расширенный список и объединяем в регулярное выражение
-const bannedWords = createExtendedBannedWords(baseBannedWords)
-	.map(word => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')) // Экранируем специальные символы
-	.join('|')
-
-// Создаем регулярное выражение только с основной проверкой
-const bannedWordsRegex = new RegExp(
-	`(${bannedWords})`, // Только проверка на запрещенные слова и их вариации
+// Создаем регулярное выражение один раз при инициализации
+const BANNED_WORDS_REGEX = new RegExp(
+	createExtendedBannedWords(baseBannedWords)
+		.map(word => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+		.join('|'),
 	'i'
 )
+
+const debouncedCheck = debounce((value: string) => {
+	return !BANNED_WORDS_REGEX.test(value)
+}, 300)
 
 export const generateFanpackSchema = yup.object().shape({
 	socialNetworks: yup
@@ -837,20 +839,22 @@ export const generateFanpackSchema = yup.object().shape({
 		.required('Введи свой никнейм')
 		.min(1, 'Никнейм должен быть не менее 1 символа')
 		.max(36, 'Никнейм не должен превышать 36 символов')
-		.test('no-banned-words', 'Никнейм содержит неприемлемые слова', value => {
-			if (!value) return true
+		.test(
+			'no-banned-words',
+			'Никнейм содержит неприемлемые слова',
+			async function (value: string): Promise<boolean> {
+				if (!value) return true
 
-			// Удаляем повторяющиеся пробелы и точки
-			const normalizedValue = value
-				.toLowerCase()
-				.replace(/\s+/g, ' ')
-				.replace(/\.+/g, '.')
-				.replace(/(.)\1+/g, '$1')
-				.replace(/[._-]/g, ' ')
+				const normalizedValue = value
+					.toLowerCase()
+					.replace(/\s+/g, ' ')
+					.replace(/\.+/g, '.')
+					.replace(/(.)\1+/g, '$1')
+					.replace(/[._-]/g, ' ')
 
-			// Проверяем нормализованное значение
-			return !bannedWordsRegex.test(normalizedValue)
-		}),
+				return debouncedCheck(normalizedValue) ?? false
+			}
+		),
 })
 
 export type FanpackFormData = yup.InferType<typeof generateFanpackSchema>
