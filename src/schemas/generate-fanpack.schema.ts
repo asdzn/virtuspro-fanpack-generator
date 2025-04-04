@@ -8,7 +8,7 @@ export enum SocialNetwork {
 
 // Функция для создания вариаций слова с заменой букв
 const createWordVariations = (word: string): string[] => {
-	const variations = [word]
+	const variations = new Set([word])
 
 	// Карта замен для русских букв
 	const russianReplacements: Record<string, string[]> = {
@@ -34,23 +34,41 @@ const createWordVariations = (word: string): string[] => {
 		ы: ['bi', 'ьi', 'ъi'],
 	}
 
-	// Создаем вариации для каждой буквы в слове
+	// 1. Создаем вариации с повторяющимися буквами (1-3 повторения)
+	const chars = word.split('')
+	for (let i = 0; i < chars.length; i++) {
+		// Добавляем варианты с дублированными буквами
+		variations.add(word.slice(0, i) + chars[i].repeat(2) + word.slice(i + 1))
+		variations.add(word.slice(0, i) + chars[i].repeat(3) + word.slice(i + 1))
+	}
+
+	// 2. Создаем вариации для каждой буквы в слове с заменами
 	for (let i = 0; i < word.length; i++) {
 		const letter = word[i].toLowerCase()
 		const replacements = russianReplacements[letter]
 
 		if (replacements) {
 			replacements.forEach(replacement => {
-				variations.push(word.slice(0, i) + replacement + word.slice(i + 1))
+				const baseVariation = word.slice(0, i) + replacement + word.slice(i + 1)
+				variations.add(baseVariation)
+
+				// Добавляем варианты с дублированием замененной буквы
+				variations.add(
+					word.slice(0, i) + replacement.repeat(2) + word.slice(i + 1)
+				)
+				variations.add(
+					word.slice(0, i) + replacement.repeat(3) + word.slice(i + 1)
+				)
 			})
 		}
 	}
 
-	// Добавляем вариации с точками и пробелами между буквами
-	variations.push(word.split('').join('.'))
-	variations.push(word.split('').join(' '))
+	// 3. Добавляем вариации с точками и пробелами между буквами
+	variations.add(word.split('').join('.'))
+	variations.add(word.split('').join(' '))
 
-	return variations
+	// 4. Удаляем возможные пробелы в начале и конце каждой вариации
+	return Array.from(variations).map(v => v.trim())
 }
 
 // Создаем расширенный список запрещенных слов
@@ -64,10 +82,10 @@ const createExtendedBannedWords = (words: string[]): string[] => {
 		// Добавляем вариации
 		createWordVariations(word).forEach(variation => {
 			extended.add(variation)
-		})
 
-		// Добавляем вариации с повторяющимися буквами
-		extended.add(word.replace(/(.)/g, '$1$1'))
+			// Добавляем вариацию с удалением повторяющихся букв
+			extended.add(variation.replace(/(.)\1+/g, '$1'))
+		})
 	})
 
 	return Array.from(extended)
@@ -75,6 +93,12 @@ const createExtendedBannedWords = (words: string[]): string[] => {
 
 // Базовый список запрещенных слов
 const baseBannedWords = [
+	'пиздец',
+	'fuck',
+	'fucking',
+	'fucker',
+	'проститутка',
+	'шлюха',
 	'днише',
 	'лох',
 	'днави',
@@ -821,6 +845,7 @@ export const generateFanpackSchema = yup.object().shape({
 				.toLowerCase()
 				.replace(/\s+/g, ' ')
 				.replace(/\.+/g, '.')
+				.replace(/(.)\1+/g, '$1')
 
 			// Проверяем нормализованное значение
 			return !bannedWordsRegex.test(normalizedValue)
