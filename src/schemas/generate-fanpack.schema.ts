@@ -806,14 +806,14 @@ export const generateFanpackSchema = yup.object().shape({
 	socialNetworks: yup
 		.array()
 		.of(yup.mixed<SocialNetwork>().oneOf(Object.values(SocialNetwork)))
-		.min(1, 'Please select at least one social network')
-		.required('Please select social networks'),
+		.min(1, 'Выбери хотя бы одну социальную сеть')
+		.required('Выбери социальные сети'),
 	nickname: yup
 		.string()
-		.required('Please enter your nickname')
-		.min(1, 'Nickname must be at least 1 character long')
-		.max(36, 'Nickname must not exceed 36 characters')
-		.test('no-banned-words', 'Nickname contains inappropriate words', value => {
+		.required('Введи свой никнейм')
+		.min(1, 'Никнейм должен быть не менее 1 символа')
+		.max(36, 'Никнейм не должен превышать 36 символов')
+		.test('no-banned-words', 'Никнейм содержит неприемлемые слова', value => {
 			if (!value) return true
 
 			// Удаляем повторяющиеся пробелы и точки

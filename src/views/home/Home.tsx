@@ -20,6 +20,8 @@ const Home = () => {
 		id: number
 		name: SocialNetwork
 		icon: React.ReactNode
+		caption: string
+		hidden?: boolean
 	}
 
 	const SOCIAL_NETWORKS: SocialNetworkItem[] = [
@@ -29,6 +31,7 @@ const Home = () => {
 			icon: (
 				<Icon28LogoVkGlyph className='w-full h-full' width={40} height={40} />
 			),
+			caption: 'Аватар и обложка архивом',
 		},
 		{
 			id: 2,
@@ -40,11 +43,14 @@ const Home = () => {
 					height={40}
 				/>
 			),
+			caption: 'Только аватар',
 		},
 		{
 			id: 3,
 			name: SocialNetwork.X,
 			icon: <Icon28LogoX className='w-full h-full' width={40} height={40} />,
+			caption: 'Аватар и обложка архивом',
+			hidden: true,
 		},
 	]
 
@@ -83,15 +89,15 @@ const Home = () => {
 		try {
 			setIsGenerating(true)
 
-			await new Promise(resolve => setTimeout(resolve, 500))
+			await new Promise(resolve => setTimeout(resolve, 200))
 
 			await generateFanpack(data)
 			reset()
 			setSelectedNetworks([])
-			toast.success('Fanpack successfully generated and downloaded')
+			toast.success('Фанпак успешно сгенерирован и скачан')
 		} catch (error) {
 			console.error(error)
-			toast.error('Error generating fanpack')
+			toast.error('Ошибка при генерации фанпака')
 		} finally {
 			setIsGenerating(false)
 		}
@@ -308,24 +314,27 @@ const Home = () => {
 				>
 					<div className='flex flex-col gap-4'>
 						<span className='font-bold text-base uppercase text-white'>
-							1. Choose a social network
+							1. Выбери социальные сети
 						</span>
 
-						<div className='w-full flex flex gap-1 text-xs'>
-							{SOCIAL_NETWORKS.map(item => (
-								<button
-									type='button'
-									key={item.id}
-									onClick={() => handleNetworkSelect(item.name)}
-									className={twMerge(
-										'w-full transition-all duration-300 text-white rounded-lg py-6 flex items-center justify-center gap-2 uppercase cursor-pointer',
-										selectedNetworks.includes(item.name)
-											? 'bg-ewc-gold hover:bg-ewc-gold-light'
-											: 'bg-ewc-dark hover:bg-ewc-gold'
-									)}
-								>
-									{item.icon}
-								</button>
+						<div className='w-full flex flex gap-1'>
+							{SOCIAL_NETWORKS.filter(item => !item.hidden).map(item => (
+								<span key={item.id} className='w-full flex flex-col gap-1'>
+									<button
+										type='button'
+										onClick={() => handleNetworkSelect(item.name)}
+										className={twMerge(
+											'w-full transition-all duration-300 text-white rounded-lg py-6 flex items-center justify-center gap-2 uppercase cursor-pointer',
+											selectedNetworks.includes(item.name)
+												? 'bg-ewc-gold hover:bg-ewc-gold-light'
+												: 'bg-ewc-dark hover:bg-ewc-gold'
+										)}
+									>
+										{item.icon}
+									</button>
+
+									<span className='text-white/40 text-xs'>{item.caption}</span>
+								</span>
 							))}
 						</div>
 					</div>
@@ -337,7 +346,7 @@ const Home = () => {
 							htmlFor='nickname'
 							className='font-bold text-base uppercase text-white cursor-pointer'
 						>
-							2. Enter your nickname
+							2. Напиши свой никнейм
 						</label>
 
 						<div className='flex flex-col gap-1'>
@@ -348,7 +357,7 @@ const Home = () => {
 								aria-labelledby='nicknameType'
 								type='text'
 								className='w-full h-16 text-white rounded-md ring-0 focus:ring-0 focus:outline-none text-3xl select-none font-medium'
-								placeholder='Enter nickname'
+								placeholder='Введите никнейм'
 							/>
 
 							{errors.nickname && (
@@ -370,7 +379,7 @@ const Home = () => {
 						{isGenerating ? (
 							<Spinner className='text-white' width={32} height={32} />
 						) : (
-							<span className='pt-0.5'>Generate</span>
+							<span className='pt-0.5'>Сгенерировать</span>
 						)}
 					</button>
 
