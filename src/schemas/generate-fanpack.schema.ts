@@ -846,6 +846,7 @@ export const generateFanpackSchema = yup.object().shape({
 				.replace(/\s+/g, ' ')
 				.replace(/\.+/g, '.')
 				.replace(/(.)\1+/g, '$1')
+				.replace(/[._-]/g, ' ')
 
 			// Проверяем нормализованное значение
 			return !bannedWordsRegex.test(normalizedValue)
